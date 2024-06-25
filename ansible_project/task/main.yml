@@ -1,0 +1,17 @@
+---
+- name: start an instance with a public IP address
+  amazon.aws.ec2_instance:
+    name: "{{ item.name }}"
+    instance_type: t2.micro
+    security_group: default
+    key_name: "ssh"
+    region: us-east-2
+    aws_access_key: "{{ ec2_access_key }}"
+    aws_secret_key: "{{ ec2_secret_key }}"
+    network:
+      assign_public_ip: true
+    image_id: "{{ item.image }}"
+  loop:
+    - { image: "ami-033fabdd332044f06", name: "managed-node1" }
+    - { image: "ami-09040d770ffe2224f", name: "managed-node2" }
+    - { image: "ami-09040d770ffe2224f", name: "managed-node3" }
