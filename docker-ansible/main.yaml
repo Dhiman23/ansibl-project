@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: update the machine
+  ansible.builtin.command: apt-get update
+- name: verify the docker is installed or not
+  ansible.builtin.command: docker --version
+  register: output
+  ignore_errors: yes
+- name: install docker
+  ansible.builtin.apt:
+    name: docker.io
+    state: present
+  when: output.failed
+- name: givinng permission
+  ansible.builtin.command: chmod 666 /var/run/docker.sock
+- name: running sonarqube container on port
+  ansible.builtin.command: docker run -d -p 9000:9000 sonarqube:lts-community
